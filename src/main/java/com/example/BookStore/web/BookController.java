@@ -1,7 +1,5 @@
 package com.example.BookStore.web;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.example.BookStore.domain.Book;
 import com.example.BookStore.domain.BookRepository;
+import com.example.BookStore.domain.CategoryRepository;
 
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -20,6 +19,8 @@ public class BookController {
 	
 	@Autowired
 	private BookRepository repository;
+	@Autowired
+	private CategoryRepository crepository;
 	
 	@GetMapping("/booklist")
 	  public String BookList(Model model) {
@@ -29,6 +30,7 @@ public class BookController {
 	@GetMapping("/addbookpage")
 	public String addBookpage(Model model) {
 		model.addAttribute("book", new Book());
+		model.addAttribute("categories", crepository.findAll());
 	    return "addbook";
 	}
 	
@@ -36,7 +38,7 @@ public class BookController {
 	public String addBook(@ModelAttribute Book book, Model model) {
 		repository.save(book);
 		model.addAttribute("books", repository.findAll());
-	    return "booklist";
+	    return "redirect:/booklist";
 	}
 	
 	@GetMapping("/deletebook/{id}")
@@ -44,7 +46,7 @@ public class BookController {
 		long id = Integer.parseInt(bookId);
 		repository.deleteById(id);
 		model.addAttribute("books", repository.findAll());
-		return "booklist";
+		return "redirect:/booklist";
 	}
 	
 	@GetMapping("/editbookpage/{id}")
@@ -52,6 +54,7 @@ public class BookController {
 		long id = Integer.parseInt(bookId);
 		model.addAttribute("booktoedit", repository.findById(id));
 		model.addAttribute("bookid", bookId);
+		model.addAttribute("categories", crepository.findAll());
 		return "editbook";
 	}
 	
@@ -61,7 +64,7 @@ public class BookController {
 		editedBook.setId(id);
 		repository.save(editedBook);
 		model.addAttribute("books", repository.findAll());
-	    return "booklist";
+	    return "redirect:/booklist";
 	}
 
  }

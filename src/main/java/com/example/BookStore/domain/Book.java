@@ -5,6 +5,8 @@ package com.example.BookStore.domain;
 	import javax.persistence.GeneratedValue;
 	import javax.persistence.GenerationType;
 	import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 	@Entity
 	public class Book {
@@ -17,20 +19,31 @@ package com.example.BookStore.domain;
 	    private String isbn;
 	    private int price;
 	    
-	    
+	    @ManyToOne
+	    @JoinColumn(name = "categoryId")
+	    private Category category;
 
 	    public Book(){}
 
-	    public Book(String title, String author, int publicationYear, String isbn, int price){
+	    public Book(String title, String author, int publicationYear, String isbn, int price, Category category){
 	       this.title = title;
 	       this.author = author; 
 	       this.publicationYear = publicationYear;
 	       this.isbn = isbn;
 	       this.price = price;
+	       this.category = category;
 	    }
 
 		public long getId() {
 			return id;
+		}
+
+		public Category getCategory() {
+			return category;
+		}
+
+		public void setCategory(Category category) {
+			this.category = category;
 		}
 
 		public void setId(long id) {
